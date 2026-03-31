@@ -110,6 +110,19 @@ export interface JapanMapProps {
   correctId?: string | null;
   selectedId?: string | null;
   phase: "playing" | "answered";
+  /** モバイルパネル表示時に SVG の viewBox を上書きする */
+  viewBox?: string;
+  /**
+   * SVG 要素に追加する className。
+   * モバイル固定高コンテナ内では "h-full w-full" を渡すことで
+   * コンテナいっぱいに描画できる。省略時は "w-full"（幅100%・高さ自動）。
+   */
+  svgClassName?: string;
+  /**
+   * 表示するタイルの ID 集合。指定した場合、この ID に含まれるタイルのみ描画し
+   * 他地域のタイルを完全に非表示にする。省略時は全 47 都道府県を表示。
+   */
+  visibleIds?: readonly string[];
 }
 
 export function JapanMap({
@@ -117,6 +130,9 @@ export function JapanMap({
   correctId,
   selectedId,
   phase,
+  viewBox: viewBoxOverride,
+  svgClassName,
+  visibleIds,
 }: JapanMapProps) {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
@@ -139,14 +155,21 @@ export function JapanMap({
     };
   }
 
+  const viewBox = viewBoxOverride ?? `0 0 ${VW} ${VH}`;
+
+  // visibleIds が指定されている場合はその地域のタイルのみ描画
+  const visibleSet = visibleIds ? new Set(visibleIds) : null;
+  const tiles = visibleSet ? TILES.filter((t) => visibleSet.has(t.id)) : TILES;
+
   return (
     <svg
-      viewBox={`0 0 ${VW} ${VH}`}
-      width="100%"
+      viewBox={viewBox}
+      className={svgClassName ?? "w-full"}
+      preserveAspectRatio="xMidYMid meet"
       aria-label="日本地図"
       style={{ userSelect: "none" }}
     >
-      {TILES.map((tile) => {
+      {tiles.map((tile) => {
         const x = px(tile.left);
         const y = py(tile.top);
         const w = pw(tile.width);
