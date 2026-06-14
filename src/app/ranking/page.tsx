@@ -7,7 +7,15 @@ import { Difficulty } from "@/types";
 import { DIFFICULTY_CONFIG, RANKING_DISPLAY_COUNT } from "@/constants/game";
 import { Trophy, Medal, Crown, Star, Gamepad2, LogIn } from "lucide-react";
 
-export const metadata = { title: "ランキング | けんちゃれ！" };
+export const metadata = {
+  title: "ランキング",
+  description:
+    "けんちゃれ！の難易度別・全国ランキング。かんたん・ふつう・むずかしいそれぞれの上位20名を掲載。あなたもプレイして上位を目指そう！",
+  openGraph: {
+    title: "ランキング | けんちゃれ！",
+    description: "都道府県当てゲーム「けんちゃれ！」の難易度別全国ランキング。上位を目指してチャレンジ！",
+  },
+};
 
 interface RankingPageProps {
   searchParams: Promise<{ tab?: string }>;

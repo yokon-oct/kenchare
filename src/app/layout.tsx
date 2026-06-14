@@ -10,9 +10,56 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://kenchare.vercel.app";
+
 export const metadata: Metadata = {
-  title: "けんちゃれ！ | 都道府県当てゲーム",
-  description: "都道府県の特徴ヒントをもとに、日本地図上の場所を当てるゲームです。",
+  title: {
+    default: "けんちゃれ！ | 都道府県当てゲーム",
+    template: "%s | けんちゃれ！",
+  },
+  description:
+    "ヒントを読んで日本地図の都道府県を当てるクイズゲーム。かんたん・ふつう・むずかしいの3段階。全10問・毎回ランダム出題で何度でも遊べる！地理の勉強にも最適。無料でプレイできます。",
+  keywords: [
+    "都道府県",
+    "日本地図",
+    "クイズ",
+    "ゲーム",
+    "地理",
+    "勉強",
+    "無料",
+    "けんちゃれ",
+    "都道府県当て",
+    "47都道府県",
+  ],
+  metadataBase: new URL(siteUrl),
+  openGraph: {
+    title: "けんちゃれ！ | 都道府県当てゲーム",
+    description:
+      "ヒントを読んで日本地図の都道府県を当てよう！無料で遊べる地理クイズゲーム。全10問・3段階の難易度。",
+    url: siteUrl,
+    siteName: "けんちゃれ！",
+    locale: "ja_JP",
+    type: "website",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "けんちゃれ！都道府県当てゲーム",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "けんちゃれ！ | 都道府県当てゲーム",
+    description:
+      "ヒントを読んで都道府県を当てよう！無料地理クイズゲーム。全10問・3段階の難易度。",
+    images: ["/og-image.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({

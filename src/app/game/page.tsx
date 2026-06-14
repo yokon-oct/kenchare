@@ -4,7 +4,18 @@ import { DIFFICULTY_CONFIG } from "@/constants/game";
 import { Difficulty } from "@/types";
 import { Zap, ChevronRight, Clock, Star } from "lucide-react";
 
-export const metadata = { title: "難易度選択 | けんちゃれ！" };
+export const metadata = {
+  title: "難易度選択",
+  description:
+    "かんたん・ふつう・むずかしいの3段階から難易度を選んでゲームスタート！全10問・各30秒のタイマー制。早く正解するほど高得点！",
+  openGraph: {
+    title: "難易度選択 | けんちゃれ！",
+    description: "3段階の難易度から選んでプレイ！都道府県当てゲーム「けんちゃれ！」",
+  },
+  robots: {
+    index: false,
+  },
+};
 
 const DIFFICULTY_STYLES: Record<
   Difficulty,

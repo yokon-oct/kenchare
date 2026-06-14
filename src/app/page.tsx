@@ -14,6 +14,30 @@ import {
 } from "lucide-react";
 import { DIFFICULTY_CONFIG } from "@/constants/game";
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://kenchare.vercel.app";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "けんちゃれ！",
+  description:
+    "都道府県の特徴ヒントをもとに日本地図の場所を当てる地理クイズゲーム。全10問・3段階の難易度。無料でプレイできます。",
+  url: siteUrl,
+  applicationCategory: "GameApplication",
+  operatingSystem: "Web",
+  inLanguage: "ja",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "JPY",
+  },
+  genre: "教育・地理クイズ",
+  audience: {
+    "@type": "Audience",
+    audienceType: "一般向け（10代〜大人）",
+  },
+};
+
 export default async function HomePage() {
   const supabase = await createClient();
   const {
@@ -22,6 +46,10 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen bg-linear-to-br from-orange-50 via-amber-50 to-yellow-50">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* ヒーローセクション */}
       <section className="relative overflow-hidden px-4 pt-16 pb-20 text-center">
         {/* 背景装飾 */}
