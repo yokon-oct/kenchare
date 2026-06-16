@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/server";
@@ -6,6 +7,7 @@ import { Difficulty } from "@/types";
 import { DIFFICULTY_CONFIG } from "@/constants/game";
 import { Trophy, RotateCcw, Star, CheckCircle2, XCircle, ArrowRight } from "lucide-react";
 import { SaveScoreEffect } from "./SaveScoreEffect";
+import { ShareButtons } from "@/components/game/ShareButtons";
 
 interface ResultPageProps {
   searchParams: Promise<{
@@ -15,7 +17,43 @@ interface ResultPageProps {
   }>;
 }
 
-export const metadata = { title: "結果 | けんちゃれ！" };
+export async function generateMetadata({
+  searchParams,
+}: ResultPageProps): Promise<Metadata> {
+  const { score: rawScore, difficulty: rawDifficulty, correct: rawCorrect } =
+    await searchParams;
+  const score = Math.max(0, parseInt(rawScore ?? "0", 10));
+  const correct = Math.max(0, Math.min(parseInt(rawCorrect ?? "0", 10), 10));
+  const difficulty = (
+    ["easy", "normal", "hard"].includes(rawDifficulty ?? "")
+      ? rawDifficulty
+      : "easy"
+  ) as Difficulty;
+  const config = DIFFICULTY_CONFIG[difficulty];
+
+  const title = `${correct}/10問正解・${score.toLocaleString()}点（${config.label}） | けんちゃれ！`;
+  const description = `都道府県当てゲーム「けんちゃれ！」で${config.label}モードに挑戦！${correct}/10問正解、${score.toLocaleString()}点を獲得しました。あなたも挑戦してみよう！`;
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://kenchare.vercel.app";
+  const ogImageUrl = `${siteUrl}/api/og?score=${score}&correct=${correct}&difficulty=${difficulty}`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: [{ url: ogImageUrl, width: 1200, height: 630, alt: title }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogImageUrl],
+    },
+    robots: { index: false },
+  };
+}
 
 export default async function ResultPage({ searchParams }: ResultPageProps) {
   const {
@@ -109,6 +147,13 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
             <p className="text-center text-base font-bold text-gray-700">
               {getMessage()}
             </p>
+          </CardContent>
+        </Card>
+
+        {/* SNSシェア */}
+        <Card className="border-2 border-orange-100 rounded-3xl shadow-sm mb-6 overflow-hidden">
+          <CardContent className="p-5">
+            <ShareButtons score={score} correct={correct} difficulty={difficulty} />
           </CardContent>
         </Card>
 
